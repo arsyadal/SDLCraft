@@ -10,7 +10,7 @@
     "dev:web": "bun --cwd apps/web dev",
     "dev:api": "bun --cwd apps/api dev",
     "dev:worker": "bun --cwd apps/worker dev",
-    "test": "bun test"
+    "test": "vitest run apps/api/src/main.test.ts --config apps/api/vitest.config.ts"
   },
   "devDependencies": {
     "@types/bun": "latest",
