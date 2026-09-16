@@ -1,5 +1,5 @@
 {
-  "id": "f75b2b3c-ddb3-466d-be8e-597b5aa50bb6",
+  "id": "f06f0a08-fc4d-4baa-998e-5c7bec05fe5e",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -1291,19 +1291,6 @@
         }
       },
       "foreignKeys": {
-        "audit_logs_actor_id_users_id_fk": {
-          "name": "audit_logs_actor_id_users_id_fk",
-          "tableFrom": "audit_logs",
-          "tableTo": "users",
-          "columnsFrom": [
-            "actor_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
         "audit_logs_project_tenant_fk": {
           "name": "audit_logs_project_tenant_fk",
           "tableFrom": "audit_logs",
@@ -1319,15 +1306,36 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
+        "audit_logs_actor_project_member_fk": {
+          "name": "audit_logs_actor_project_member_fk",
+          "tableFrom": "audit_logs",
+          "tableTo": "project_members",
+          "columnsFrom": [
+            "organization_id",
+            "project_id",
+            "actor_id"
+          ],
+          "columnsTo": [
+            "organization_id",
+            "project_id",
+            "user_id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
         "audit_logs_resource_fk": {
           "name": "audit_logs_resource_fk",
           "tableFrom": "audit_logs",
           "tableTo": "audit_resources",
           "columnsFrom": [
+            "organization_id",
+            "project_id",
             "resource_id",
             "resource_type"
           ],
           "columnsTo": [
+            "organization_id",
+            "project_id",
             "id",
             "resource_type"
           ],
@@ -1448,6 +1456,39 @@
         "audit_resources_id_type_unique": {
           "name": "audit_resources_id_type_unique",
           "columns": [
+            {
+              "expression": "id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "resource_type",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "audit_resources_tenant_id_type_unique": {
+          "name": "audit_resources_tenant_id_type_unique",
+          "columns": [
+            {
+              "expression": "organization_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "project_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
             {
               "expression": "id",
               "isExpression": false,
@@ -2042,19 +2083,6 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "project_members_user_id_users_id_fk": {
-          "name": "project_members_user_id_users_id_fk",
-          "tableFrom": "project_members",
-          "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
         "project_members_project_tenant_fk": {
           "name": "project_members_project_tenant_fk",
           "tableFrom": "project_members",
@@ -2066,6 +2094,21 @@
           "columnsTo": [
             "organization_id",
             "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "project_members_organization_user_fk": {
+          "name": "project_members_organization_user_fk",
+          "tableFrom": "project_members",
+          "tableTo": "organization_memberships",
+          "columnsFrom": [
+            "organization_id",
+            "user_id"
+          ],
+          "columnsTo": [
+            "organization_id",
+            "user_id"
           ],
           "onDelete": "no action",
           "onUpdate": "no action"

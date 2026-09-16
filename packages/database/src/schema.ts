@@ -50,7 +50,7 @@ export const projects = pgTable("projects", {
 export const projectMembers = pgTable("project_members", {
   organizationId: uuid("organization_id").notNull(),
   projectId: uuid("project_id").notNull(),
-  userId: uuid("user_id").notNull().references(() => users.id),
+  userId: uuid("user_id").notNull(),
   role: text("role").notNull(),
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
 }, (table) => [
@@ -59,6 +59,11 @@ export const projectMembers = pgTable("project_members", {
     columns: [table.organizationId, table.projectId],
     foreignColumns: [projects.organizationId, projects.id],
     name: "project_members_project_tenant_fk",
+  }),
+  foreignKey({
+    columns: [table.organizationId, table.userId],
+    foreignColumns: [memberships.organizationId, memberships.userId],
+    name: "project_members_organization_user_fk",
   }),
 ]);
 
@@ -704,6 +709,7 @@ export const auditResources = pgTable("audit_resources", {
   uniqueIndex("audit_resources_tenant_id_unique").on(table.organizationId, table.projectId, table.id),
   uniqueIndex("audit_resources_type_key_unique").on(table.organizationId, table.projectId, table.resourceType, table.resourceKey),
   uniqueIndex("audit_resources_id_type_unique").on(table.id, table.resourceType),
+  uniqueIndex("audit_resources_tenant_id_type_unique").on(table.organizationId, table.projectId, table.id, table.resourceType),
   foreignKey({
     columns: [table.organizationId, table.projectId],
     foreignColumns: [projects.organizationId, projects.id],
@@ -715,7 +721,7 @@ export const auditLogs = pgTable("audit_logs", {
   id: uuid("id").defaultRandom().primaryKey(),
   organizationId: uuid("organization_id").notNull(),
   projectId: uuid("project_id").notNull(),
-  actorId: uuid("actor_id").references(() => users.id),
+  actorId: uuid("actor_id"),
   resourceId: uuid("resource_id").notNull(),
   resourceType: text("resource_type").notNull(),
   action: text("action").notNull(),
@@ -729,8 +735,13 @@ export const auditLogs = pgTable("audit_logs", {
     name: "audit_logs_project_tenant_fk",
   }),
   foreignKey({
-    columns: [table.resourceId, table.resourceType],
-    foreignColumns: [auditResources.id, auditResources.resourceType],
+    columns: [table.organizationId, table.projectId, table.actorId],
+    foreignColumns: [projectMembers.organizationId, projectMembers.projectId, projectMembers.userId],
+    name: "audit_logs_actor_project_member_fk",
+  }),
+  foreignKey({
+    columns: [table.organizationId, table.projectId, table.resourceId, table.resourceType],
+    foreignColumns: [auditResources.organizationId, auditResources.projectId, auditResources.id, auditResources.resourceType],
     name: "audit_logs_resource_fk",
   }),
 ]);

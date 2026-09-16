@@ -191,9 +191,13 @@ describe("database schema", () => {
       columns: ["organization_id", "project_id", "repository_id"],
       foreignColumns: ["organization_id", "project_id", "id"],
     });
+    expect(foreignKeyPairs(projectMembers)).toContainEqual({
+      columns: ["organization_id", "user_id"],
+      foreignColumns: ["organization_id", "user_id"],
+    });
     expect(foreignKeyPairs(auditLogs)).toContainEqual({
-      columns: ["resource_id", "resource_type"],
-      foreignColumns: ["id", "resource_type"],
+      columns: ["organization_id", "project_id", "resource_id", "resource_type"],
+      foreignColumns: ["organization_id", "project_id", "id", "resource_type"],
     });
     expect(tableColumns(auditResources)).toEqual(expect.arrayContaining([
       "id", "organization_id", "project_id", "resource_type", "resource_key",
