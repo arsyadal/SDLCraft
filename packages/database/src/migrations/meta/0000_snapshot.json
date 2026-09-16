@@ -1,5 +1,5 @@
 {
-  "id": "10df2467-2b04-4b9e-ae19-ec0c51892774",
+  "id": "f75b2b3c-ddb3-466d-be8e-597b5aa50bb6",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -51,8 +51,8 @@
           "primaryKey": false,
           "notNull": true
         },
-        "payload": {
-          "name": "payload",
+        "input": {
+          "name": "input",
           "type": "jsonb",
           "primaryKey": false,
           "notNull": true
@@ -86,56 +86,80 @@
           "concurrently": false,
           "method": "btree",
           "with": {}
+        },
+        "agent_jobs_tenant_id_unique": {
+          "name": "agent_jobs_tenant_id_unique",
+          "columns": [
+            {
+              "expression": "organization_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "project_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
         }
       },
       "foreignKeys": {
-        "agent_jobs_organization_id_organizations_id_fk": {
-          "name": "agent_jobs_organization_id_organizations_id_fk",
-          "tableFrom": "agent_jobs",
-          "tableTo": "organizations",
-          "columnsFrom": [
-            "organization_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "agent_jobs_project_id_projects_id_fk": {
-          "name": "agent_jobs_project_id_projects_id_fk",
+        "agent_jobs_project_tenant_fk": {
+          "name": "agent_jobs_project_tenant_fk",
           "tableFrom": "agent_jobs",
           "tableTo": "projects",
           "columnsFrom": [
+            "organization_id",
             "project_id"
           ],
           "columnsTo": [
+            "organization_id",
             "id"
           ],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "agent_jobs_workflow_run_id_workflow_runs_id_fk": {
-          "name": "agent_jobs_workflow_run_id_workflow_runs_id_fk",
+        "agent_jobs_workflow_run_tenant_fk": {
+          "name": "agent_jobs_workflow_run_tenant_fk",
           "tableFrom": "agent_jobs",
           "tableTo": "workflow_runs",
           "columnsFrom": [
+            "organization_id",
+            "project_id",
             "workflow_run_id"
           ],
           "columnsTo": [
+            "organization_id",
+            "project_id",
             "id"
           ],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "agent_jobs_agent_id_agents_id_fk": {
-          "name": "agent_jobs_agent_id_agents_id_fk",
+        "agent_jobs_agent_tenant_fk": {
+          "name": "agent_jobs_agent_tenant_fk",
           "tableFrom": "agent_jobs",
           "tableTo": "agents",
           "columnsFrom": [
+            "organization_id",
+            "project_id",
             "agent_id"
           ],
           "columnsTo": [
+            "organization_id",
+            "project_id",
             "id"
           ],
           "onDelete": "no action",
@@ -189,8 +213,8 @@
           "primaryKey": false,
           "notNull": true
         },
-        "payload": {
-          "name": "payload",
+        "output": {
+          "name": "output",
           "type": "jsonb",
           "primaryKey": false,
           "notNull": true
@@ -236,43 +260,202 @@
           "concurrently": false,
           "method": "btree",
           "with": {}
+        },
+        "agent_runs_tenant_id_unique": {
+          "name": "agent_runs_tenant_id_unique",
+          "columns": [
+            {
+              "expression": "organization_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "project_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
         }
       },
       "foreignKeys": {
-        "agent_runs_organization_id_organizations_id_fk": {
-          "name": "agent_runs_organization_id_organizations_id_fk",
-          "tableFrom": "agent_runs",
-          "tableTo": "organizations",
-          "columnsFrom": [
-            "organization_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "agent_runs_project_id_projects_id_fk": {
-          "name": "agent_runs_project_id_projects_id_fk",
+        "agent_runs_project_tenant_fk": {
+          "name": "agent_runs_project_tenant_fk",
           "tableFrom": "agent_runs",
           "tableTo": "projects",
           "columnsFrom": [
+            "organization_id",
             "project_id"
           ],
           "columnsTo": [
+            "organization_id",
             "id"
           ],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "agent_runs_job_id_agent_jobs_id_fk": {
-          "name": "agent_runs_job_id_agent_jobs_id_fk",
+        "agent_runs_job_tenant_fk": {
+          "name": "agent_runs_job_tenant_fk",
           "tableFrom": "agent_runs",
           "tableTo": "agent_jobs",
           "columnsFrom": [
+            "organization_id",
+            "project_id",
             "job_id"
           ],
           "columnsTo": [
+            "organization_id",
+            "project_id",
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.agent_versions": {
+      "name": "agent_versions",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "organization_id": {
+          "name": "organization_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "project_id": {
+          "name": "project_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "agent_id": {
+          "name": "agent_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "version": {
+          "name": "version",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "configuration": {
+          "name": "configuration",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "agent_versions_agent_version_unique": {
+          "name": "agent_versions_agent_version_unique",
+          "columns": [
+            {
+              "expression": "agent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "version",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "agent_versions_tenant_id_unique": {
+          "name": "agent_versions_tenant_id_unique",
+          "columns": [
+            {
+              "expression": "organization_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "project_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "agent_versions_project_tenant_fk": {
+          "name": "agent_versions_project_tenant_fk",
+          "tableFrom": "agent_versions",
+          "tableTo": "projects",
+          "columnsFrom": [
+            "organization_id",
+            "project_id"
+          ],
+          "columnsTo": [
+            "organization_id",
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "agent_versions_agent_tenant_fk": {
+          "name": "agent_versions_agent_tenant_fk",
+          "tableFrom": "agent_versions",
+          "tableTo": "agents",
+          "columnsFrom": [
+            "organization_id",
+            "project_id",
+            "agent_id"
+          ],
+          "columnsTo": [
+            "organization_id",
+            "project_id",
             "id"
           ],
           "onDelete": "no action",
@@ -320,8 +503,8 @@
           "primaryKey": false,
           "notNull": true
         },
-        "payload": {
-          "name": "payload",
+        "configuration": {
+          "name": "configuration",
           "type": "jsonb",
           "primaryKey": false,
           "notNull": true
@@ -335,9 +518,42 @@
         }
       },
       "indexes": {
+        "agents_tenant_id_unique": {
+          "name": "agents_tenant_id_unique",
+          "columns": [
+            {
+              "expression": "organization_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "project_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
         "agents_project_name_unique": {
           "name": "agents_project_name_unique",
           "columns": [
+            {
+              "expression": "organization_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
             {
               "expression": "project_id",
               "isExpression": false,
@@ -358,27 +574,16 @@
         }
       },
       "foreignKeys": {
-        "agents_organization_id_organizations_id_fk": {
-          "name": "agents_organization_id_organizations_id_fk",
-          "tableFrom": "agents",
-          "tableTo": "organizations",
-          "columnsFrom": [
-            "organization_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "agents_project_id_projects_id_fk": {
-          "name": "agents_project_id_projects_id_fk",
+        "agents_project_tenant_fk": {
+          "name": "agents_project_tenant_fk",
           "tableFrom": "agents",
           "tableTo": "projects",
           "columnsFrom": [
+            "organization_id",
             "project_id"
           ],
           "columnsTo": [
+            "organization_id",
             "id"
           ],
           "onDelete": "no action",
@@ -473,57 +678,81 @@
           "concurrently": false,
           "method": "btree",
           "with": {}
+        },
+        "approvals_tenant_id_unique": {
+          "name": "approvals_tenant_id_unique",
+          "columns": [
+            {
+              "expression": "organization_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "project_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
         }
       },
       "foreignKeys": {
-        "approvals_organization_id_organizations_id_fk": {
-          "name": "approvals_organization_id_organizations_id_fk",
-          "tableFrom": "approvals",
-          "tableTo": "organizations",
-          "columnsFrom": [
-            "organization_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "approvals_project_id_projects_id_fk": {
-          "name": "approvals_project_id_projects_id_fk",
+        "approvals_project_tenant_fk": {
+          "name": "approvals_project_tenant_fk",
           "tableFrom": "approvals",
           "tableTo": "projects",
           "columnsFrom": [
+            "organization_id",
             "project_id"
           ],
           "columnsTo": [
+            "organization_id",
             "id"
           ],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "approvals_artifact_version_id_artifact_versions_id_fk": {
-          "name": "approvals_artifact_version_id_artifact_versions_id_fk",
+        "approvals_artifact_version_tenant_fk": {
+          "name": "approvals_artifact_version_tenant_fk",
           "tableFrom": "approvals",
           "tableTo": "artifact_versions",
           "columnsFrom": [
+            "organization_id",
+            "project_id",
             "artifact_version_id"
           ],
           "columnsTo": [
+            "organization_id",
+            "project_id",
             "id"
           ],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "approvals_reviewer_id_users_id_fk": {
-          "name": "approvals_reviewer_id_users_id_fk",
+        "approvals_reviewer_project_member_fk": {
+          "name": "approvals_reviewer_project_member_fk",
           "tableFrom": "approvals",
-          "tableTo": "users",
+          "tableTo": "project_members",
           "columnsFrom": [
+            "organization_id",
+            "project_id",
             "reviewer_id"
           ],
           "columnsTo": [
-            "id"
+            "organization_id",
+            "project_id",
+            "user_id"
           ],
           "onDelete": "no action",
           "onUpdate": "no action"
@@ -611,56 +840,80 @@
           "concurrently": false,
           "method": "btree",
           "with": {}
+        },
+        "artifact_links_tenant_id_unique": {
+          "name": "artifact_links_tenant_id_unique",
+          "columns": [
+            {
+              "expression": "organization_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "project_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
         }
       },
       "foreignKeys": {
-        "artifact_links_organization_id_organizations_id_fk": {
-          "name": "artifact_links_organization_id_organizations_id_fk",
-          "tableFrom": "artifact_links",
-          "tableTo": "organizations",
-          "columnsFrom": [
-            "organization_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "artifact_links_project_id_projects_id_fk": {
-          "name": "artifact_links_project_id_projects_id_fk",
+        "artifact_links_project_tenant_fk": {
+          "name": "artifact_links_project_tenant_fk",
           "tableFrom": "artifact_links",
           "tableTo": "projects",
           "columnsFrom": [
+            "organization_id",
             "project_id"
           ],
           "columnsTo": [
+            "organization_id",
             "id"
           ],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "artifact_links_source_version_id_artifact_versions_id_fk": {
-          "name": "artifact_links_source_version_id_artifact_versions_id_fk",
+        "artifact_links_source_tenant_fk": {
+          "name": "artifact_links_source_tenant_fk",
           "tableFrom": "artifact_links",
           "tableTo": "artifact_versions",
           "columnsFrom": [
+            "organization_id",
+            "project_id",
             "source_version_id"
           ],
           "columnsTo": [
+            "organization_id",
+            "project_id",
             "id"
           ],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "artifact_links_target_version_id_artifact_versions_id_fk": {
-          "name": "artifact_links_target_version_id_artifact_versions_id_fk",
+        "artifact_links_target_tenant_fk": {
+          "name": "artifact_links_target_tenant_fk",
           "tableFrom": "artifact_links",
           "tableTo": "artifact_versions",
           "columnsFrom": [
+            "organization_id",
+            "project_id",
             "target_version_id"
           ],
           "columnsTo": [
+            "organization_id",
+            "project_id",
             "id"
           ],
           "onDelete": "no action",
@@ -743,43 +996,63 @@
           "concurrently": false,
           "method": "btree",
           "with": {}
+        },
+        "artifact_versions_tenant_id_unique": {
+          "name": "artifact_versions_tenant_id_unique",
+          "columns": [
+            {
+              "expression": "organization_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "project_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
         }
       },
       "foreignKeys": {
-        "artifact_versions_organization_id_organizations_id_fk": {
-          "name": "artifact_versions_organization_id_organizations_id_fk",
-          "tableFrom": "artifact_versions",
-          "tableTo": "organizations",
-          "columnsFrom": [
-            "organization_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "artifact_versions_project_id_projects_id_fk": {
-          "name": "artifact_versions_project_id_projects_id_fk",
+        "artifact_versions_project_tenant_fk": {
+          "name": "artifact_versions_project_tenant_fk",
           "tableFrom": "artifact_versions",
           "tableTo": "projects",
           "columnsFrom": [
+            "organization_id",
             "project_id"
           ],
           "columnsTo": [
+            "organization_id",
             "id"
           ],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "artifact_versions_artifact_id_artifacts_id_fk": {
-          "name": "artifact_versions_artifact_id_artifacts_id_fk",
+        "artifact_versions_artifact_tenant_fk": {
+          "name": "artifact_versions_artifact_tenant_fk",
           "tableFrom": "artifact_versions",
           "tableTo": "artifacts",
           "columnsFrom": [
+            "organization_id",
+            "project_id",
             "artifact_id"
           ],
           "columnsTo": [
+            "organization_id",
+            "project_id",
             "id"
           ],
           "onDelete": "no action",
@@ -849,6 +1122,33 @@
         }
       },
       "indexes": {
+        "artifacts_tenant_id_unique": {
+          "name": "artifacts_tenant_id_unique",
+          "columns": [
+            {
+              "expression": "organization_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "project_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
         "artifacts_project_idx": {
           "name": "artifacts_project_idx",
           "columns": [
@@ -872,27 +1172,16 @@
         }
       },
       "foreignKeys": {
-        "artifacts_organization_id_organizations_id_fk": {
-          "name": "artifacts_organization_id_organizations_id_fk",
-          "tableFrom": "artifacts",
-          "tableTo": "organizations",
-          "columnsFrom": [
-            "organization_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "artifacts_project_id_projects_id_fk": {
-          "name": "artifacts_project_id_projects_id_fk",
+        "artifacts_project_tenant_fk": {
+          "name": "artifacts_project_tenant_fk",
           "tableFrom": "artifacts",
           "tableTo": "projects",
           "columnsFrom": [
+            "organization_id",
             "project_id"
           ],
           "columnsTo": [
+            "organization_id",
             "id"
           ],
           "onDelete": "no action",
@@ -926,7 +1215,7 @@
           "name": "project_id",
           "type": "uuid",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "actor_id": {
           "name": "actor_id",
@@ -934,21 +1223,15 @@
           "primaryKey": false,
           "notNull": false
         },
-        "artifact_id": {
-          "name": "artifact_id",
+        "resource_id": {
+          "name": "resource_id",
           "type": "uuid",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "resource_type": {
           "name": "resource_type",
           "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "resource_id": {
-          "name": "resource_id",
-          "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
@@ -958,8 +1241,8 @@
           "primaryKey": false,
           "notNull": true
         },
-        "payload": {
-          "name": "payload",
+        "metadata": {
+          "name": "metadata",
           "type": "jsonb",
           "primaryKey": false,
           "notNull": true
@@ -978,6 +1261,12 @@
           "columns": [
             {
               "expression": "organization_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "project_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -1002,32 +1291,6 @@
         }
       },
       "foreignKeys": {
-        "audit_logs_organization_id_organizations_id_fk": {
-          "name": "audit_logs_organization_id_organizations_id_fk",
-          "tableFrom": "audit_logs",
-          "tableTo": "organizations",
-          "columnsFrom": [
-            "organization_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "audit_logs_project_id_projects_id_fk": {
-          "name": "audit_logs_project_id_projects_id_fk",
-          "tableFrom": "audit_logs",
-          "tableTo": "projects",
-          "columnsFrom": [
-            "project_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
         "audit_logs_actor_id_users_id_fk": {
           "name": "audit_logs_actor_id_users_id_fk",
           "tableFrom": "audit_logs",
@@ -1041,14 +1304,325 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "audit_logs_artifact_id_artifacts_id_fk": {
-          "name": "audit_logs_artifact_id_artifacts_id_fk",
+        "audit_logs_project_tenant_fk": {
+          "name": "audit_logs_project_tenant_fk",
           "tableFrom": "audit_logs",
-          "tableTo": "artifacts",
+          "tableTo": "projects",
           "columnsFrom": [
-            "artifact_id"
+            "organization_id",
+            "project_id"
           ],
           "columnsTo": [
+            "organization_id",
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "audit_logs_resource_fk": {
+          "name": "audit_logs_resource_fk",
+          "tableFrom": "audit_logs",
+          "tableTo": "audit_resources",
+          "columnsFrom": [
+            "resource_id",
+            "resource_type"
+          ],
+          "columnsTo": [
+            "id",
+            "resource_type"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.audit_resources": {
+      "name": "audit_resources",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "organization_id": {
+          "name": "organization_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "project_id": {
+          "name": "project_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "resource_type": {
+          "name": "resource_type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "resource_key": {
+          "name": "resource_key",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "audit_resources_tenant_id_unique": {
+          "name": "audit_resources_tenant_id_unique",
+          "columns": [
+            {
+              "expression": "organization_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "project_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "audit_resources_type_key_unique": {
+          "name": "audit_resources_type_key_unique",
+          "columns": [
+            {
+              "expression": "organization_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "project_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "resource_type",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "resource_key",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "audit_resources_id_type_unique": {
+          "name": "audit_resources_id_type_unique",
+          "columns": [
+            {
+              "expression": "id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "resource_type",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "audit_resources_project_tenant_fk": {
+          "name": "audit_resources_project_tenant_fk",
+          "tableFrom": "audit_resources",
+          "tableTo": "projects",
+          "columnsFrom": [
+            "organization_id",
+            "project_id"
+          ],
+          "columnsTo": [
+            "organization_id",
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.deployments": {
+      "name": "deployments",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "organization_id": {
+          "name": "organization_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "project_id": {
+          "name": "project_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "release_candidate_id": {
+          "name": "release_candidate_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "environment": {
+          "name": "environment",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "url": {
+          "name": "url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "deployments_release_environment_unique": {
+          "name": "deployments_release_environment_unique",
+          "columns": [
+            {
+              "expression": "release_candidate_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "environment",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "deployments_tenant_id_unique": {
+          "name": "deployments_tenant_id_unique",
+          "columns": [
+            {
+              "expression": "organization_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "project_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "deployments_project_tenant_fk": {
+          "name": "deployments_project_tenant_fk",
+          "tableFrom": "deployments",
+          "tableTo": "projects",
+          "columnsFrom": [
+            "organization_id",
+            "project_id"
+          ],
+          "columnsTo": [
+            "organization_id",
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "deployments_release_candidate_tenant_fk": {
+          "name": "deployments_release_candidate_tenant_fk",
+          "tableFrom": "deployments",
+          "tableTo": "release_candidates",
+          "columnsFrom": [
+            "organization_id",
+            "project_id",
+            "release_candidate_id"
+          ],
+          "columnsTo": [
+            "organization_id",
+            "project_id",
             "id"
           ],
           "onDelete": "no action",
@@ -1084,14 +1658,20 @@
           "primaryKey": false,
           "notNull": true
         },
+        "design_id": {
+          "name": "design_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
         "version": {
           "name": "version",
           "type": "integer",
           "primaryKey": false,
           "notNull": true
         },
-        "payload": {
-          "name": "payload",
+        "content": {
+          "name": "content",
           "type": "jsonb",
           "primaryKey": false,
           "notNull": true
@@ -1105,11 +1685,11 @@
         }
       },
       "indexes": {
-        "design_versions_project_version_unique": {
-          "name": "design_versions_project_version_unique",
+        "design_versions_design_version_unique": {
+          "name": "design_versions_design_version_unique",
           "columns": [
             {
-              "expression": "project_id",
+              "expression": "design_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -1125,30 +1705,165 @@
           "concurrently": false,
           "method": "btree",
           "with": {}
+        },
+        "design_versions_tenant_id_unique": {
+          "name": "design_versions_tenant_id_unique",
+          "columns": [
+            {
+              "expression": "organization_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "project_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
         }
       },
       "foreignKeys": {
-        "design_versions_organization_id_organizations_id_fk": {
-          "name": "design_versions_organization_id_organizations_id_fk",
+        "design_versions_project_tenant_fk": {
+          "name": "design_versions_project_tenant_fk",
           "tableFrom": "design_versions",
-          "tableTo": "organizations",
+          "tableTo": "projects",
           "columnsFrom": [
-            "organization_id"
+            "organization_id",
+            "project_id"
           ],
           "columnsTo": [
+            "organization_id",
             "id"
           ],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "design_versions_project_id_projects_id_fk": {
-          "name": "design_versions_project_id_projects_id_fk",
+        "design_versions_design_tenant_fk": {
+          "name": "design_versions_design_tenant_fk",
           "tableFrom": "design_versions",
+          "tableTo": "designs",
+          "columnsFrom": [
+            "organization_id",
+            "project_id",
+            "design_id"
+          ],
+          "columnsTo": [
+            "organization_id",
+            "project_id",
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.designs": {
+      "name": "designs",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "organization_id": {
+          "name": "organization_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "project_id": {
+          "name": "project_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "title": {
+          "name": "title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "designs_tenant_id_unique": {
+          "name": "designs_tenant_id_unique",
+          "columns": [
+            {
+              "expression": "organization_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "project_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "designs_project_tenant_fk": {
+          "name": "designs_project_tenant_fk",
+          "tableFrom": "designs",
           "tableTo": "projects",
           "columnsFrom": [
+            "organization_id",
             "project_id"
           ],
           "columnsTo": [
+            "organization_id",
             "id"
           ],
           "onDelete": "no action",
@@ -1289,6 +2004,88 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
+    "public.project_members": {
+      "name": "project_members",
+      "schema": "",
+      "columns": {
+        "organization_id": {
+          "name": "organization_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "project_id": {
+          "name": "project_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "role": {
+          "name": "role",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "project_members_user_id_users_id_fk": {
+          "name": "project_members_user_id_users_id_fk",
+          "tableFrom": "project_members",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "project_members_project_tenant_fk": {
+          "name": "project_members_project_tenant_fk",
+          "tableFrom": "project_members",
+          "tableTo": "projects",
+          "columnsFrom": [
+            "organization_id",
+            "project_id"
+          ],
+          "columnsTo": [
+            "organization_id",
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "project_members_organization_id_project_id_user_id_pk": {
+          "name": "project_members_organization_id_project_id_user_id_pk",
+          "columns": [
+            "organization_id",
+            "project_id",
+            "user_id"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
     "public.projects": {
       "name": "projects",
       "schema": "",
@@ -1334,6 +2131,27 @@
         }
       },
       "indexes": {
+        "projects_organization_id_unique": {
+          "name": "projects_organization_id_unique",
+          "columns": [
+            {
+              "expression": "organization_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
         "projects_organization_slug_unique": {
           "name": "projects_organization_slug_unique",
           "columns": [
@@ -1474,56 +2292,80 @@
           "concurrently": false,
           "method": "btree",
           "with": {}
+        },
+        "pull_requests_tenant_id_unique": {
+          "name": "pull_requests_tenant_id_unique",
+          "columns": [
+            {
+              "expression": "organization_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "project_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
         }
       },
       "foreignKeys": {
-        "pull_requests_organization_id_organizations_id_fk": {
-          "name": "pull_requests_organization_id_organizations_id_fk",
-          "tableFrom": "pull_requests",
-          "tableTo": "organizations",
-          "columnsFrom": [
-            "organization_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "pull_requests_project_id_projects_id_fk": {
-          "name": "pull_requests_project_id_projects_id_fk",
+        "pull_requests_project_tenant_fk": {
+          "name": "pull_requests_project_tenant_fk",
           "tableFrom": "pull_requests",
           "tableTo": "projects",
           "columnsFrom": [
+            "organization_id",
             "project_id"
           ],
           "columnsTo": [
+            "organization_id",
             "id"
           ],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "pull_requests_repository_id_repositories_id_fk": {
-          "name": "pull_requests_repository_id_repositories_id_fk",
+        "pull_requests_repository_tenant_fk": {
+          "name": "pull_requests_repository_tenant_fk",
           "tableFrom": "pull_requests",
           "tableTo": "repositories",
           "columnsFrom": [
+            "organization_id",
+            "project_id",
             "repository_id"
           ],
           "columnsTo": [
+            "organization_id",
+            "project_id",
             "id"
           ],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "pull_requests_artifact_version_id_artifact_versions_id_fk": {
-          "name": "pull_requests_artifact_version_id_artifact_versions_id_fk",
+        "pull_requests_artifact_version_tenant_fk": {
+          "name": "pull_requests_artifact_version_tenant_fk",
           "tableFrom": "pull_requests",
           "tableTo": "artifact_versions",
           "columnsFrom": [
+            "organization_id",
+            "project_id",
             "artifact_version_id"
           ],
           "columnsTo": [
+            "organization_id",
+            "project_id",
             "id"
           ],
           "onDelete": "no action",
@@ -1606,43 +2448,63 @@
           "concurrently": false,
           "method": "btree",
           "with": {}
+        },
+        "release_candidates_tenant_id_unique": {
+          "name": "release_candidates_tenant_id_unique",
+          "columns": [
+            {
+              "expression": "organization_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "project_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
         }
       },
       "foreignKeys": {
-        "release_candidates_organization_id_organizations_id_fk": {
-          "name": "release_candidates_organization_id_organizations_id_fk",
-          "tableFrom": "release_candidates",
-          "tableTo": "organizations",
-          "columnsFrom": [
-            "organization_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "release_candidates_project_id_projects_id_fk": {
-          "name": "release_candidates_project_id_projects_id_fk",
+        "release_candidates_project_tenant_fk": {
+          "name": "release_candidates_project_tenant_fk",
           "tableFrom": "release_candidates",
           "tableTo": "projects",
           "columnsFrom": [
+            "organization_id",
             "project_id"
           ],
           "columnsTo": [
+            "organization_id",
             "id"
           ],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "release_candidates_artifact_version_id_artifact_versions_id_fk": {
-          "name": "release_candidates_artifact_version_id_artifact_versions_id_fk",
+        "release_candidates_artifact_version_tenant_fk": {
+          "name": "release_candidates_artifact_version_tenant_fk",
           "tableFrom": "release_candidates",
           "tableTo": "artifact_versions",
           "columnsFrom": [
+            "organization_id",
+            "project_id",
             "artifact_version_id"
           ],
           "columnsTo": [
+            "organization_id",
+            "project_id",
             "id"
           ],
           "onDelete": "no action",
@@ -1674,6 +2536,12 @@
         },
         "project_id": {
           "name": "project_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "connection_id": {
+          "name": "connection_id",
           "type": "uuid",
           "primaryKey": false,
           "notNull": true
@@ -1711,8 +2579,280 @@
         }
       },
       "indexes": {
-        "repositories_provider_external_unique": {
-          "name": "repositories_provider_external_unique",
+        "repositories_tenant_id_unique": {
+          "name": "repositories_tenant_id_unique",
+          "columns": [
+            {
+              "expression": "organization_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "project_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "repositories_connection_external_unique": {
+          "name": "repositories_connection_external_unique",
+          "columns": [
+            {
+              "expression": "connection_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "external_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "repositories_project_tenant_fk": {
+          "name": "repositories_project_tenant_fk",
+          "tableFrom": "repositories",
+          "tableTo": "projects",
+          "columnsFrom": [
+            "organization_id",
+            "project_id"
+          ],
+          "columnsTo": [
+            "organization_id",
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "repositories_connection_tenant_fk": {
+          "name": "repositories_connection_tenant_fk",
+          "tableFrom": "repositories",
+          "tableTo": "repository_connections",
+          "columnsFrom": [
+            "organization_id",
+            "project_id",
+            "connection_id"
+          ],
+          "columnsTo": [
+            "organization_id",
+            "project_id",
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.repository_branches": {
+      "name": "repository_branches",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "organization_id": {
+          "name": "organization_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "project_id": {
+          "name": "project_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "repository_id": {
+          "name": "repository_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "repository_branches_repository_name_unique": {
+          "name": "repository_branches_repository_name_unique",
+          "columns": [
+            {
+              "expression": "repository_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "name",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "repository_branches_tenant_id_unique": {
+          "name": "repository_branches_tenant_id_unique",
+          "columns": [
+            {
+              "expression": "organization_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "project_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "repository_branches_project_tenant_fk": {
+          "name": "repository_branches_project_tenant_fk",
+          "tableFrom": "repository_branches",
+          "tableTo": "projects",
+          "columnsFrom": [
+            "organization_id",
+            "project_id"
+          ],
+          "columnsTo": [
+            "organization_id",
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "repository_branches_repository_tenant_fk": {
+          "name": "repository_branches_repository_tenant_fk",
+          "tableFrom": "repository_branches",
+          "tableTo": "repositories",
+          "columnsFrom": [
+            "organization_id",
+            "project_id",
+            "repository_id"
+          ],
+          "columnsTo": [
+            "organization_id",
+            "project_id",
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.repository_connections": {
+      "name": "repository_connections",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "organization_id": {
+          "name": "organization_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "project_id": {
+          "name": "project_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "provider": {
+          "name": "provider",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "external_id": {
+          "name": "external_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "credentials": {
+          "name": "credentials",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "repository_connections_provider_external_unique": {
+          "name": "repository_connections_provider_external_unique",
           "columns": [
             {
               "expression": "organization_id",
@@ -1737,30 +2877,46 @@
           "concurrently": false,
           "method": "btree",
           "with": {}
+        },
+        "repository_connections_tenant_id_unique": {
+          "name": "repository_connections_tenant_id_unique",
+          "columns": [
+            {
+              "expression": "organization_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "project_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
         }
       },
       "foreignKeys": {
-        "repositories_organization_id_organizations_id_fk": {
-          "name": "repositories_organization_id_organizations_id_fk",
-          "tableFrom": "repositories",
-          "tableTo": "organizations",
-          "columnsFrom": [
-            "organization_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "repositories_project_id_projects_id_fk": {
-          "name": "repositories_project_id_projects_id_fk",
-          "tableFrom": "repositories",
+        "repository_connections_project_tenant_fk": {
+          "name": "repository_connections_project_tenant_fk",
+          "tableFrom": "repository_connections",
           "tableTo": "projects",
           "columnsFrom": [
+            "organization_id",
             "project_id"
           ],
           "columnsTo": [
+            "organization_id",
             "id"
           ],
           "onDelete": "no action",
@@ -1796,14 +2952,20 @@
           "primaryKey": false,
           "notNull": true
         },
+        "requirement_id": {
+          "name": "requirement_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
         "version": {
           "name": "version",
           "type": "integer",
           "primaryKey": false,
           "notNull": true
         },
-        "payload": {
-          "name": "payload",
+        "content": {
+          "name": "content",
           "type": "jsonb",
           "primaryKey": false,
           "notNull": true
@@ -1817,11 +2979,11 @@
         }
       },
       "indexes": {
-        "requirement_versions_project_version_unique": {
-          "name": "requirement_versions_project_version_unique",
+        "requirement_versions_requirement_version_unique": {
+          "name": "requirement_versions_requirement_version_unique",
           "columns": [
             {
-              "expression": "project_id",
+              "expression": "requirement_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -1837,30 +2999,165 @@
           "concurrently": false,
           "method": "btree",
           "with": {}
+        },
+        "requirement_versions_tenant_id_unique": {
+          "name": "requirement_versions_tenant_id_unique",
+          "columns": [
+            {
+              "expression": "organization_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "project_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
         }
       },
       "foreignKeys": {
-        "requirement_versions_organization_id_organizations_id_fk": {
-          "name": "requirement_versions_organization_id_organizations_id_fk",
+        "requirement_versions_project_tenant_fk": {
+          "name": "requirement_versions_project_tenant_fk",
           "tableFrom": "requirement_versions",
-          "tableTo": "organizations",
+          "tableTo": "projects",
           "columnsFrom": [
-            "organization_id"
+            "organization_id",
+            "project_id"
           ],
           "columnsTo": [
+            "organization_id",
             "id"
           ],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "requirement_versions_project_id_projects_id_fk": {
-          "name": "requirement_versions_project_id_projects_id_fk",
+        "requirement_versions_requirement_tenant_fk": {
+          "name": "requirement_versions_requirement_tenant_fk",
           "tableFrom": "requirement_versions",
+          "tableTo": "requirements",
+          "columnsFrom": [
+            "organization_id",
+            "project_id",
+            "requirement_id"
+          ],
+          "columnsTo": [
+            "organization_id",
+            "project_id",
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.requirements": {
+      "name": "requirements",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "organization_id": {
+          "name": "organization_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "project_id": {
+          "name": "project_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "title": {
+          "name": "title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "requirements_tenant_id_unique": {
+          "name": "requirements_tenant_id_unique",
+          "columns": [
+            {
+              "expression": "organization_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "project_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "requirements_project_tenant_fk": {
+          "name": "requirements_project_tenant_fk",
+          "tableFrom": "requirements",
           "tableTo": "projects",
           "columnsFrom": [
+            "organization_id",
             "project_id"
           ],
           "columnsTo": [
+            "organization_id",
             "id"
           ],
           "onDelete": "no action",
@@ -1892,6 +3189,12 @@
         },
         "project_id": {
           "name": "project_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "security_scan_id": {
+          "name": "security_scan_id",
           "type": "uuid",
           "primaryKey": false,
           "notNull": true
@@ -1935,6 +3238,33 @@
         }
       },
       "indexes": {
+        "security_findings_tenant_id_unique": {
+          "name": "security_findings_tenant_id_unique",
+          "columns": [
+            {
+              "expression": "organization_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "project_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
         "security_findings_project_idx": {
           "name": "security_findings_project_idx",
           "columns": [
@@ -1958,40 +3288,195 @@
         }
       },
       "foreignKeys": {
-        "security_findings_organization_id_organizations_id_fk": {
-          "name": "security_findings_organization_id_organizations_id_fk",
-          "tableFrom": "security_findings",
-          "tableTo": "organizations",
-          "columnsFrom": [
-            "organization_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "security_findings_project_id_projects_id_fk": {
-          "name": "security_findings_project_id_projects_id_fk",
+        "security_findings_project_tenant_fk": {
+          "name": "security_findings_project_tenant_fk",
           "tableFrom": "security_findings",
           "tableTo": "projects",
           "columnsFrom": [
+            "organization_id",
             "project_id"
           ],
           "columnsTo": [
+            "organization_id",
             "id"
           ],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "security_findings_artifact_version_id_artifact_versions_id_fk": {
-          "name": "security_findings_artifact_version_id_artifact_versions_id_fk",
+        "security_findings_scan_tenant_fk": {
+          "name": "security_findings_scan_tenant_fk",
+          "tableFrom": "security_findings",
+          "tableTo": "security_scans",
+          "columnsFrom": [
+            "organization_id",
+            "project_id",
+            "security_scan_id"
+          ],
+          "columnsTo": [
+            "organization_id",
+            "project_id",
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "security_findings_artifact_version_tenant_fk": {
+          "name": "security_findings_artifact_version_tenant_fk",
           "tableFrom": "security_findings",
           "tableTo": "artifact_versions",
           "columnsFrom": [
+            "organization_id",
+            "project_id",
             "artifact_version_id"
           ],
           "columnsTo": [
+            "organization_id",
+            "project_id",
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.security_scans": {
+      "name": "security_scans",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "organization_id": {
+          "name": "organization_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "project_id": {
+          "name": "project_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "workflow_run_id": {
+          "name": "workflow_run_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "tool": {
+          "name": "tool",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "summary": {
+          "name": "summary",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "security_scans_tenant_id_unique": {
+          "name": "security_scans_tenant_id_unique",
+          "columns": [
+            {
+              "expression": "organization_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "project_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "security_scans_project_idx": {
+          "name": "security_scans_project_idx",
+          "columns": [
+            {
+              "expression": "organization_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "project_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "security_scans_project_tenant_fk": {
+          "name": "security_scans_project_tenant_fk",
+          "tableFrom": "security_scans",
+          "tableTo": "projects",
+          "columnsFrom": [
+            "organization_id",
+            "project_id"
+          ],
+          "columnsTo": [
+            "organization_id",
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "security_scans_workflow_run_tenant_fk": {
+          "name": "security_scans_workflow_run_tenant_fk",
+          "tableFrom": "security_scans",
+          "tableTo": "workflow_runs",
+          "columnsFrom": [
+            "organization_id",
+            "project_id",
+            "workflow_run_id"
+          ],
+          "columnsTo": [
+            "organization_id",
+            "project_id",
             "id"
           ],
           "onDelete": "no action",
@@ -2027,14 +3512,20 @@
           "primaryKey": false,
           "notNull": true
         },
+        "test_run_id": {
+          "name": "test_run_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
         "artifact_version_id": {
           "name": "artifact_version_id",
           "type": "uuid",
           "primaryKey": false,
           "notNull": false
         },
-        "suite": {
-          "name": "suite",
+        "name": {
+          "name": "name",
           "type": "text",
           "primaryKey": false,
           "notNull": true
@@ -2045,8 +3536,8 @@
           "primaryKey": false,
           "notNull": true
         },
-        "payload": {
-          "name": "payload",
+        "details": {
+          "name": "details",
           "type": "jsonb",
           "primaryKey": false,
           "notNull": true
@@ -2060,6 +3551,33 @@
         }
       },
       "indexes": {
+        "test_results_tenant_id_unique": {
+          "name": "test_results_tenant_id_unique",
+          "columns": [
+            {
+              "expression": "organization_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "project_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
         "test_results_project_idx": {
           "name": "test_results_project_idx",
           "columns": [
@@ -2083,40 +3601,218 @@
         }
       },
       "foreignKeys": {
-        "test_results_organization_id_organizations_id_fk": {
-          "name": "test_results_organization_id_organizations_id_fk",
-          "tableFrom": "test_results",
-          "tableTo": "organizations",
-          "columnsFrom": [
-            "organization_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "test_results_project_id_projects_id_fk": {
-          "name": "test_results_project_id_projects_id_fk",
+        "test_results_project_tenant_fk": {
+          "name": "test_results_project_tenant_fk",
           "tableFrom": "test_results",
           "tableTo": "projects",
           "columnsFrom": [
+            "organization_id",
             "project_id"
           ],
           "columnsTo": [
+            "organization_id",
             "id"
           ],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "test_results_artifact_version_id_artifact_versions_id_fk": {
-          "name": "test_results_artifact_version_id_artifact_versions_id_fk",
+        "test_results_test_run_tenant_fk": {
+          "name": "test_results_test_run_tenant_fk",
+          "tableFrom": "test_results",
+          "tableTo": "test_runs",
+          "columnsFrom": [
+            "organization_id",
+            "project_id",
+            "test_run_id"
+          ],
+          "columnsTo": [
+            "organization_id",
+            "project_id",
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "test_results_artifact_version_tenant_fk": {
+          "name": "test_results_artifact_version_tenant_fk",
           "tableFrom": "test_results",
           "tableTo": "artifact_versions",
           "columnsFrom": [
+            "organization_id",
+            "project_id",
             "artifact_version_id"
           ],
           "columnsTo": [
+            "organization_id",
+            "project_id",
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.test_runs": {
+      "name": "test_runs",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "organization_id": {
+          "name": "organization_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "project_id": {
+          "name": "project_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "workflow_run_id": {
+          "name": "workflow_run_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "repository_id": {
+          "name": "repository_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "suite": {
+          "name": "suite",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "summary": {
+          "name": "summary",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "test_runs_tenant_id_unique": {
+          "name": "test_runs_tenant_id_unique",
+          "columns": [
+            {
+              "expression": "organization_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "project_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "test_runs_project_idx": {
+          "name": "test_runs_project_idx",
+          "columns": [
+            {
+              "expression": "organization_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "project_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "test_runs_project_tenant_fk": {
+          "name": "test_runs_project_tenant_fk",
+          "tableFrom": "test_runs",
+          "tableTo": "projects",
+          "columnsFrom": [
+            "organization_id",
+            "project_id"
+          ],
+          "columnsTo": [
+            "organization_id",
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "test_runs_workflow_run_tenant_fk": {
+          "name": "test_runs_workflow_run_tenant_fk",
+          "tableFrom": "test_runs",
+          "tableTo": "workflow_runs",
+          "columnsFrom": [
+            "organization_id",
+            "project_id",
+            "workflow_run_id"
+          ],
+          "columnsTo": [
+            "organization_id",
+            "project_id",
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "test_runs_repository_tenant_fk": {
+          "name": "test_runs_repository_tenant_fk",
+          "tableFrom": "test_runs",
+          "tableTo": "repositories",
+          "columnsFrom": [
+            "organization_id",
+            "project_id",
+            "repository_id"
+          ],
+          "columnsTo": [
+            "organization_id",
+            "project_id",
             "id"
           ],
           "onDelete": "no action",
@@ -2219,8 +3915,8 @@
           "primaryKey": false,
           "notNull": true
         },
-        "payload": {
-          "name": "payload",
+        "context": {
+          "name": "context",
           "type": "jsonb",
           "primaryKey": false,
           "notNull": true
@@ -2246,6 +3942,33 @@
         }
       },
       "indexes": {
+        "workflow_runs_tenant_id_unique": {
+          "name": "workflow_runs_tenant_id_unique",
+          "columns": [
+            {
+              "expression": "organization_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "project_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
         "workflow_runs_project_idx": {
           "name": "workflow_runs_project_idx",
           "columns": [
@@ -2269,40 +3992,331 @@
         }
       },
       "foreignKeys": {
-        "workflow_runs_organization_id_organizations_id_fk": {
-          "name": "workflow_runs_organization_id_organizations_id_fk",
-          "tableFrom": "workflow_runs",
-          "tableTo": "organizations",
-          "columnsFrom": [
-            "organization_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "workflow_runs_project_id_projects_id_fk": {
-          "name": "workflow_runs_project_id_projects_id_fk",
+        "workflow_runs_project_tenant_fk": {
+          "name": "workflow_runs_project_tenant_fk",
           "tableFrom": "workflow_runs",
           "tableTo": "projects",
           "columnsFrom": [
+            "organization_id",
             "project_id"
           ],
           "columnsTo": [
+            "organization_id",
             "id"
           ],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "workflow_runs_workflow_template_id_workflow_templates_id_fk": {
-          "name": "workflow_runs_workflow_template_id_workflow_templates_id_fk",
+        "workflow_runs_template_tenant_fk": {
+          "name": "workflow_runs_template_tenant_fk",
           "tableFrom": "workflow_runs",
           "tableTo": "workflow_templates",
           "columnsFrom": [
+            "organization_id",
+            "project_id",
             "workflow_template_id"
           ],
           "columnsTo": [
+            "organization_id",
+            "project_id",
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.workflow_stage_runs": {
+      "name": "workflow_stage_runs",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "organization_id": {
+          "name": "organization_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "project_id": {
+          "name": "project_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "workflow_run_id": {
+          "name": "workflow_run_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "stage_id": {
+          "name": "stage_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "output": {
+          "name": "output",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "started_at": {
+          "name": "started_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "finished_at": {
+          "name": "finished_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "workflow_stage_runs_tenant_id_unique": {
+          "name": "workflow_stage_runs_tenant_id_unique",
+          "columns": [
+            {
+              "expression": "organization_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "project_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "workflow_stage_runs_project_tenant_fk": {
+          "name": "workflow_stage_runs_project_tenant_fk",
+          "tableFrom": "workflow_stage_runs",
+          "tableTo": "projects",
+          "columnsFrom": [
+            "organization_id",
+            "project_id"
+          ],
+          "columnsTo": [
+            "organization_id",
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "workflow_stage_runs_run_tenant_fk": {
+          "name": "workflow_stage_runs_run_tenant_fk",
+          "tableFrom": "workflow_stage_runs",
+          "tableTo": "workflow_runs",
+          "columnsFrom": [
+            "organization_id",
+            "project_id",
+            "workflow_run_id"
+          ],
+          "columnsTo": [
+            "organization_id",
+            "project_id",
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "workflow_stage_runs_stage_tenant_fk": {
+          "name": "workflow_stage_runs_stage_tenant_fk",
+          "tableFrom": "workflow_stage_runs",
+          "tableTo": "workflow_stages",
+          "columnsFrom": [
+            "organization_id",
+            "project_id",
+            "stage_id"
+          ],
+          "columnsTo": [
+            "organization_id",
+            "project_id",
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.workflow_stages": {
+      "name": "workflow_stages",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "organization_id": {
+          "name": "organization_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "project_id": {
+          "name": "project_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "workflow_template_id": {
+          "name": "workflow_template_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "position": {
+          "name": "position",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "definition": {
+          "name": "definition",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "workflow_stages_tenant_id_unique": {
+          "name": "workflow_stages_tenant_id_unique",
+          "columns": [
+            {
+              "expression": "organization_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "project_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "workflow_stages_template_name_unique": {
+          "name": "workflow_stages_template_name_unique",
+          "columns": [
+            {
+              "expression": "workflow_template_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "name",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "workflow_stages_project_tenant_fk": {
+          "name": "workflow_stages_project_tenant_fk",
+          "tableFrom": "workflow_stages",
+          "tableTo": "projects",
+          "columnsFrom": [
+            "organization_id",
+            "project_id"
+          ],
+          "columnsTo": [
+            "organization_id",
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "workflow_stages_template_tenant_fk": {
+          "name": "workflow_stages_template_tenant_fk",
+          "tableFrom": "workflow_stages",
+          "tableTo": "workflow_templates",
+          "columnsFrom": [
+            "organization_id",
+            "project_id",
+            "workflow_template_id"
+          ],
+          "columnsTo": [
+            "organization_id",
+            "project_id",
             "id"
           ],
           "onDelete": "no action",
@@ -2344,8 +4358,8 @@
           "primaryKey": false,
           "notNull": true
         },
-        "payload": {
-          "name": "payload",
+        "definition": {
+          "name": "definition",
           "type": "jsonb",
           "primaryKey": false,
           "notNull": true
@@ -2366,6 +4380,33 @@
         }
       },
       "indexes": {
+        "workflow_templates_tenant_id_unique": {
+          "name": "workflow_templates_tenant_id_unique",
+          "columns": [
+            {
+              "expression": "organization_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "project_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
         "workflow_templates_project_idx": {
           "name": "workflow_templates_project_idx",
           "columns": [
@@ -2389,27 +4430,16 @@
         }
       },
       "foreignKeys": {
-        "workflow_templates_organization_id_organizations_id_fk": {
-          "name": "workflow_templates_organization_id_organizations_id_fk",
-          "tableFrom": "workflow_templates",
-          "tableTo": "organizations",
-          "columnsFrom": [
-            "organization_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "workflow_templates_project_id_projects_id_fk": {
-          "name": "workflow_templates_project_id_projects_id_fk",
+        "workflow_templates_project_tenant_fk": {
+          "name": "workflow_templates_project_tenant_fk",
           "tableFrom": "workflow_templates",
           "tableTo": "projects",
           "columnsFrom": [
+            "organization_id",
             "project_id"
           ],
           "columnsTo": [
+            "organization_id",
             "id"
           ],
           "onDelete": "no action",

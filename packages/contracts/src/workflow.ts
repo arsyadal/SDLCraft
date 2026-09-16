@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { approvalIdSchema, artifactVersionIdSchema, projectIdSchema, workflowRunIdSchema, workflowTemplateIdSchema } from "./identifiers";
+import { approvalIdSchema, artifactVersionIdSchema, projectIdSchema, userIdSchema, workflowRunIdSchema, workflowTemplateIdSchema } from "./identifiers";
 
 export const workflowEventNameSchema = z.enum([
   "stage_started",
@@ -39,7 +39,7 @@ export const approvalSchema = z.object({
   artifactVersionId: artifactVersionIdSchema,
   gate: z.string().min(1),
   decision: approvalDecisionSchema,
-  reviewerId: z.string().uuid(),
+  reviewerId: userIdSchema,
   comment: z.string().optional(),
   createdAt: z.coerce.date(),
 });
