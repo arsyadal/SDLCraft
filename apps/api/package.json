@@ -1,0 +1,17 @@
+{
+  "name": "@sdlcraft/api",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "bun --watch src/main.ts",
+    "start": "bun src/main.ts"
+  },
+  "dependencies": {
+    "@nestjs/common": "latest",
+    "@nestjs/core": "latest",
+    "@nestjs/platform-fastify": "latest",
+    "fastify": "latest",
+    "reflect-metadata": "latest",
+    "rxjs": "latest"
+  }
+}
