@@ -217,4 +217,38 @@ describe("database schema", () => {
       unique: true,
     });
   });
+
+  test("creates unique composite foreign-key targets before adding foreign keys", async () => {
+    const migration = await Bun.file(new URL("./migrations/0001_initial.sql", import.meta.url)).text();
+    const statements = migration.split("--> statement-breakpoint").map((statement) => statement.trim());
+    const uniqueIndexPosition = new Map<string, number>();
+    const compositeForeignKeys: Array<{ position: number; table: string; columns: string[]; target: string; targetColumns: string[] }> = [];
+
+    statements.forEach((statement, position) => {
+      const uniqueIndex = statement.match(/CREATE UNIQUE INDEX "[^"]+" ON "([^"]+)"[^;]*\(([^)]+)\)/);
+      if (uniqueIndex) {
+        uniqueIndexPosition.set(`${uniqueIndex[1]}|${uniqueIndex[2].replaceAll("\"", "").split(",")}`, position);
+      }
+      const primaryKey = statement.match(/CREATE TABLE "([^"]+)"[\s\S]*?PRIMARY KEY\(([^)]+)\)/);
+      if (primaryKey) {
+        uniqueIndexPosition.set(`${primaryKey[1]}|${primaryKey[2].replaceAll("\"", "").split(",")}`, position);
+      }
+
+      const foreignKey = statement.match(/ALTER TABLE "([^"]+)" ADD CONSTRAINT "[^"]+" FOREIGN KEY \(([^)]+)\) REFERENCES "public"\."([^"]+)"\(([^)]+)\)/);
+      if (foreignKey && foreignKey[2].includes(",")) {
+        compositeForeignKeys.push({
+          position,
+          table: foreignKey[1],
+          columns: foreignKey[2].replaceAll("\"", "").split(","),
+          target: foreignKey[3],
+          targetColumns: foreignKey[4].replaceAll("\"", "").split(","),
+        });
+      }
+    });
+
+    for (const foreignKey of compositeForeignKeys) {
+      const targetKey = `${foreignKey.target}|${foreignKey.targetColumns}`;
+      expect(uniqueIndexPosition.get(targetKey), `${foreignKey.table} -> ${foreignKey.target}`).toBeLessThan(foreignKey.position);
+    }
+  });
 });

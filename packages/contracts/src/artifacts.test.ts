@@ -1,10 +1,12 @@
 import { describe, expect, test } from "vitest";
 import {
+  approvalIdSchema,
   artifactIdSchema,
   artifactVersionIdSchema,
   organizationIdSchema,
   projectIdSchema,
   userIdSchema,
+  type ApprovalId,
 } from "./identifiers";
 import {
   artifactSchema,
@@ -39,6 +41,7 @@ const validIdentity = {
   artifactId: artifactIdSchema.parse(artifactId),
   artifactVersionId: artifactVersionIdSchema.parse(artifactVersionId),
   userId: userIdSchema.parse(userId),
+  approvalId: approvalIdSchema.parse(approvalId),
 };
 
 describe("artifact contracts", () => {
@@ -63,9 +66,14 @@ describe("artifact contracts", () => {
       id: artifactVersionId,
       artifactId,
       version: 0,
+
       payload: {},
       createdAt: new Date(),
     })).toThrow();
+  });
+  test("exports a branded ApprovalId type and schema", () => {
+    const parsedApprovalId: ApprovalId = approvalIdSchema.parse(approvalId);
+    expect(parsedApprovalId).toBe(approvalId);
   });
 
   test("requires the observable artifact fields", () => {

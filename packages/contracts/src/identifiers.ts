@@ -21,6 +21,7 @@ export type ArtifactId = z.infer<typeof artifactIdSchema>;
 export type ArtifactVersionId = z.infer<typeof artifactVersionIdSchema>;
 export type AgentRunId = z.infer<typeof agentRunIdSchema>;
 export type AgentId = z.infer<typeof agentIdSchema>;
+export type ApprovalId = z.infer<typeof approvalIdSchema>;
 export type UserId = z.infer<typeof userIdSchema>;
 export type WorkflowTemplateId = z.infer<typeof workflowTemplateIdSchema>;
 export type RepositoryId = z.infer<typeof repositoryIdSchema>;

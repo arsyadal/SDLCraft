@@ -345,6 +345,65 @@ CREATE TABLE "workflow_templates" (
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
+CREATE UNIQUE INDEX "agent_jobs_idempotency_unique" ON "agent_jobs" USING btree ("organization_id","idempotency_key");--> statement-breakpoint
+CREATE UNIQUE INDEX "agent_jobs_tenant_id_unique" ON "agent_jobs" USING btree ("organization_id","project_id","id");--> statement-breakpoint
+CREATE UNIQUE INDEX "agent_runs_job_attempt_unique" ON "agent_runs" USING btree ("job_id","attempt");--> statement-breakpoint
+CREATE UNIQUE INDEX "agent_runs_tenant_id_unique" ON "agent_runs" USING btree ("organization_id","project_id","id");--> statement-breakpoint
+CREATE UNIQUE INDEX "agent_versions_agent_version_unique" ON "agent_versions" USING btree ("agent_id","version");--> statement-breakpoint
+CREATE UNIQUE INDEX "agent_versions_tenant_id_unique" ON "agent_versions" USING btree ("organization_id","project_id","id");--> statement-breakpoint
+CREATE UNIQUE INDEX "agents_tenant_id_unique" ON "agents" USING btree ("organization_id","project_id","id");--> statement-breakpoint
+CREATE UNIQUE INDEX "agents_project_name_unique" ON "agents" USING btree ("organization_id","project_id","name");--> statement-breakpoint
+CREATE UNIQUE INDEX "approvals_gate_version_unique" ON "approvals" USING btree ("artifact_version_id","gate");--> statement-breakpoint
+CREATE UNIQUE INDEX "approvals_tenant_id_unique" ON "approvals" USING btree ("organization_id","project_id","id");--> statement-breakpoint
+CREATE UNIQUE INDEX "artifact_links_source_target_relation_unique" ON "artifact_links" USING btree ("source_version_id","target_version_id","relation");--> statement-breakpoint
+CREATE UNIQUE INDEX "artifact_links_tenant_id_unique" ON "artifact_links" USING btree ("organization_id","project_id","id");--> statement-breakpoint
+CREATE UNIQUE INDEX "artifact_versions_artifact_version_unique" ON "artifact_versions" USING btree ("artifact_id","version");--> statement-breakpoint
+CREATE UNIQUE INDEX "artifact_versions_tenant_id_unique" ON "artifact_versions" USING btree ("organization_id","project_id","id");--> statement-breakpoint
+CREATE UNIQUE INDEX "artifacts_tenant_id_unique" ON "artifacts" USING btree ("organization_id","project_id","id");--> statement-breakpoint
+CREATE INDEX "artifacts_project_idx" ON "artifacts" USING btree ("organization_id","project_id");--> statement-breakpoint
+CREATE INDEX "audit_logs_resource_idx" ON "audit_logs" USING btree ("organization_id","project_id","resource_type","resource_id");--> statement-breakpoint
+CREATE UNIQUE INDEX "audit_resources_tenant_id_unique" ON "audit_resources" USING btree ("organization_id","project_id","id");--> statement-breakpoint
+CREATE UNIQUE INDEX "audit_resources_type_key_unique" ON "audit_resources" USING btree ("organization_id","project_id","resource_type","resource_key");--> statement-breakpoint
+CREATE UNIQUE INDEX "audit_resources_id_type_unique" ON "audit_resources" USING btree ("id","resource_type");--> statement-breakpoint
+CREATE UNIQUE INDEX "audit_resources_tenant_id_type_unique" ON "audit_resources" USING btree ("organization_id","project_id","id","resource_type");--> statement-breakpoint
+CREATE UNIQUE INDEX "deployments_release_environment_unique" ON "deployments" USING btree ("release_candidate_id","environment");--> statement-breakpoint
+CREATE UNIQUE INDEX "deployments_tenant_id_unique" ON "deployments" USING btree ("organization_id","project_id","id");--> statement-breakpoint
+CREATE UNIQUE INDEX "design_versions_design_version_unique" ON "design_versions" USING btree ("design_id","version");--> statement-breakpoint
+CREATE UNIQUE INDEX "design_versions_tenant_id_unique" ON "design_versions" USING btree ("organization_id","project_id","id");--> statement-breakpoint
+CREATE UNIQUE INDEX "designs_tenant_id_unique" ON "designs" USING btree ("organization_id","project_id","id");--> statement-breakpoint
+CREATE UNIQUE INDEX "organizations_slug_unique" ON "organizations" USING btree ("slug");--> statement-breakpoint
+CREATE UNIQUE INDEX "projects_organization_id_unique" ON "projects" USING btree ("organization_id","id");--> statement-breakpoint
+CREATE UNIQUE INDEX "projects_organization_slug_unique" ON "projects" USING btree ("organization_id","slug");--> statement-breakpoint
+CREATE INDEX "projects_organization_idx" ON "projects" USING btree ("organization_id");--> statement-breakpoint
+CREATE UNIQUE INDEX "pull_requests_repository_external_unique" ON "pull_requests" USING btree ("repository_id","external_id");--> statement-breakpoint
+CREATE UNIQUE INDEX "pull_requests_tenant_id_unique" ON "pull_requests" USING btree ("organization_id","project_id","id");--> statement-breakpoint
+CREATE UNIQUE INDEX "release_candidates_project_version_unique" ON "release_candidates" USING btree ("project_id","version");--> statement-breakpoint
+CREATE UNIQUE INDEX "release_candidates_tenant_id_unique" ON "release_candidates" USING btree ("organization_id","project_id","id");--> statement-breakpoint
+CREATE UNIQUE INDEX "repositories_tenant_id_unique" ON "repositories" USING btree ("organization_id","project_id","id");--> statement-breakpoint
+CREATE UNIQUE INDEX "repositories_connection_external_unique" ON "repositories" USING btree ("connection_id","external_id");--> statement-breakpoint
+CREATE UNIQUE INDEX "repository_branches_repository_name_unique" ON "repository_branches" USING btree ("repository_id","name");--> statement-breakpoint
+CREATE UNIQUE INDEX "repository_branches_tenant_id_unique" ON "repository_branches" USING btree ("organization_id","project_id","id");--> statement-breakpoint
+CREATE UNIQUE INDEX "repository_connections_provider_external_unique" ON "repository_connections" USING btree ("organization_id","provider","external_id");--> statement-breakpoint
+CREATE UNIQUE INDEX "repository_connections_tenant_id_unique" ON "repository_connections" USING btree ("organization_id","project_id","id");--> statement-breakpoint
+CREATE UNIQUE INDEX "requirement_versions_requirement_version_unique" ON "requirement_versions" USING btree ("requirement_id","version");--> statement-breakpoint
+CREATE UNIQUE INDEX "requirement_versions_tenant_id_unique" ON "requirement_versions" USING btree ("organization_id","project_id","id");--> statement-breakpoint
+CREATE UNIQUE INDEX "requirements_tenant_id_unique" ON "requirements" USING btree ("organization_id","project_id","id");--> statement-breakpoint
+CREATE UNIQUE INDEX "security_findings_tenant_id_unique" ON "security_findings" USING btree ("organization_id","project_id","id");--> statement-breakpoint
+CREATE INDEX "security_findings_project_idx" ON "security_findings" USING btree ("organization_id","project_id");--> statement-breakpoint
+CREATE UNIQUE INDEX "security_scans_tenant_id_unique" ON "security_scans" USING btree ("organization_id","project_id","id");--> statement-breakpoint
+CREATE INDEX "security_scans_project_idx" ON "security_scans" USING btree ("organization_id","project_id");--> statement-breakpoint
+CREATE UNIQUE INDEX "test_results_tenant_id_unique" ON "test_results" USING btree ("organization_id","project_id","id");--> statement-breakpoint
+CREATE INDEX "test_results_project_idx" ON "test_results" USING btree ("organization_id","project_id");--> statement-breakpoint
+CREATE UNIQUE INDEX "test_runs_tenant_id_unique" ON "test_runs" USING btree ("organization_id","project_id","id");--> statement-breakpoint
+CREATE INDEX "test_runs_project_idx" ON "test_runs" USING btree ("organization_id","project_id");--> statement-breakpoint
+CREATE UNIQUE INDEX "users_email_unique" ON "users" USING btree ("email");--> statement-breakpoint
+CREATE UNIQUE INDEX "workflow_runs_tenant_id_unique" ON "workflow_runs" USING btree ("organization_id","project_id","id");--> statement-breakpoint
+CREATE INDEX "workflow_runs_project_idx" ON "workflow_runs" USING btree ("organization_id","project_id");--> statement-breakpoint
+CREATE UNIQUE INDEX "workflow_stage_runs_tenant_id_unique" ON "workflow_stage_runs" USING btree ("organization_id","project_id","id");--> statement-breakpoint
+CREATE UNIQUE INDEX "workflow_stages_tenant_id_unique" ON "workflow_stages" USING btree ("organization_id","project_id","id");--> statement-breakpoint
+CREATE UNIQUE INDEX "workflow_stages_template_name_unique" ON "workflow_stages" USING btree ("workflow_template_id","name");--> statement-breakpoint
+CREATE UNIQUE INDEX "workflow_templates_tenant_id_unique" ON "workflow_templates" USING btree ("organization_id","project_id","id");--> statement-breakpoint
+CREATE INDEX "workflow_templates_project_idx" ON "workflow_templates" USING btree ("organization_id","project_id");
 ALTER TABLE "agent_jobs" ADD CONSTRAINT "agent_jobs_project_tenant_fk" FOREIGN KEY ("organization_id","project_id") REFERENCES "public"."projects"("organization_id","id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "agent_jobs" ADD CONSTRAINT "agent_jobs_workflow_run_tenant_fk" FOREIGN KEY ("organization_id","project_id","workflow_run_id") REFERENCES "public"."workflow_runs"("organization_id","project_id","id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "agent_jobs" ADD CONSTRAINT "agent_jobs_agent_tenant_fk" FOREIGN KEY ("organization_id","project_id","agent_id") REFERENCES "public"."agents"("organization_id","project_id","id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
@@ -408,65 +467,6 @@ ALTER TABLE "workflow_stage_runs" ADD CONSTRAINT "workflow_stage_runs_stage_tena
 ALTER TABLE "workflow_stages" ADD CONSTRAINT "workflow_stages_project_tenant_fk" FOREIGN KEY ("organization_id","project_id") REFERENCES "public"."projects"("organization_id","id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "workflow_stages" ADD CONSTRAINT "workflow_stages_template_tenant_fk" FOREIGN KEY ("organization_id","project_id","workflow_template_id") REFERENCES "public"."workflow_templates"("organization_id","project_id","id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "workflow_templates" ADD CONSTRAINT "workflow_templates_project_tenant_fk" FOREIGN KEY ("organization_id","project_id") REFERENCES "public"."projects"("organization_id","id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
-CREATE UNIQUE INDEX "agent_jobs_idempotency_unique" ON "agent_jobs" USING btree ("organization_id","idempotency_key");--> statement-breakpoint
-CREATE UNIQUE INDEX "agent_jobs_tenant_id_unique" ON "agent_jobs" USING btree ("organization_id","project_id","id");--> statement-breakpoint
-CREATE UNIQUE INDEX "agent_runs_job_attempt_unique" ON "agent_runs" USING btree ("job_id","attempt");--> statement-breakpoint
-CREATE UNIQUE INDEX "agent_runs_tenant_id_unique" ON "agent_runs" USING btree ("organization_id","project_id","id");--> statement-breakpoint
-CREATE UNIQUE INDEX "agent_versions_agent_version_unique" ON "agent_versions" USING btree ("agent_id","version");--> statement-breakpoint
-CREATE UNIQUE INDEX "agent_versions_tenant_id_unique" ON "agent_versions" USING btree ("organization_id","project_id","id");--> statement-breakpoint
-CREATE UNIQUE INDEX "agents_tenant_id_unique" ON "agents" USING btree ("organization_id","project_id","id");--> statement-breakpoint
-CREATE UNIQUE INDEX "agents_project_name_unique" ON "agents" USING btree ("organization_id","project_id","name");--> statement-breakpoint
-CREATE UNIQUE INDEX "approvals_gate_version_unique" ON "approvals" USING btree ("artifact_version_id","gate");--> statement-breakpoint
-CREATE UNIQUE INDEX "approvals_tenant_id_unique" ON "approvals" USING btree ("organization_id","project_id","id");--> statement-breakpoint
-CREATE UNIQUE INDEX "artifact_links_source_target_relation_unique" ON "artifact_links" USING btree ("source_version_id","target_version_id","relation");--> statement-breakpoint
-CREATE UNIQUE INDEX "artifact_links_tenant_id_unique" ON "artifact_links" USING btree ("organization_id","project_id","id");--> statement-breakpoint
-CREATE UNIQUE INDEX "artifact_versions_artifact_version_unique" ON "artifact_versions" USING btree ("artifact_id","version");--> statement-breakpoint
-CREATE UNIQUE INDEX "artifact_versions_tenant_id_unique" ON "artifact_versions" USING btree ("organization_id","project_id","id");--> statement-breakpoint
-CREATE UNIQUE INDEX "artifacts_tenant_id_unique" ON "artifacts" USING btree ("organization_id","project_id","id");--> statement-breakpoint
-CREATE INDEX "artifacts_project_idx" ON "artifacts" USING btree ("organization_id","project_id");--> statement-breakpoint
-CREATE INDEX "audit_logs_resource_idx" ON "audit_logs" USING btree ("organization_id","project_id","resource_type","resource_id");--> statement-breakpoint
-CREATE UNIQUE INDEX "audit_resources_tenant_id_unique" ON "audit_resources" USING btree ("organization_id","project_id","id");--> statement-breakpoint
-CREATE UNIQUE INDEX "audit_resources_type_key_unique" ON "audit_resources" USING btree ("organization_id","project_id","resource_type","resource_key");--> statement-breakpoint
-CREATE UNIQUE INDEX "audit_resources_id_type_unique" ON "audit_resources" USING btree ("id","resource_type");--> statement-breakpoint
-CREATE UNIQUE INDEX "audit_resources_tenant_id_type_unique" ON "audit_resources" USING btree ("organization_id","project_id","id","resource_type");--> statement-breakpoint
-CREATE UNIQUE INDEX "deployments_release_environment_unique" ON "deployments" USING btree ("release_candidate_id","environment");--> statement-breakpoint
-CREATE UNIQUE INDEX "deployments_tenant_id_unique" ON "deployments" USING btree ("organization_id","project_id","id");--> statement-breakpoint
-CREATE UNIQUE INDEX "design_versions_design_version_unique" ON "design_versions" USING btree ("design_id","version");--> statement-breakpoint
-CREATE UNIQUE INDEX "design_versions_tenant_id_unique" ON "design_versions" USING btree ("organization_id","project_id","id");--> statement-breakpoint
-CREATE UNIQUE INDEX "designs_tenant_id_unique" ON "designs" USING btree ("organization_id","project_id","id");--> statement-breakpoint
-CREATE UNIQUE INDEX "organizations_slug_unique" ON "organizations" USING btree ("slug");--> statement-breakpoint
-CREATE UNIQUE INDEX "projects_organization_id_unique" ON "projects" USING btree ("organization_id","id");--> statement-breakpoint
-CREATE UNIQUE INDEX "projects_organization_slug_unique" ON "projects" USING btree ("organization_id","slug");--> statement-breakpoint
-CREATE INDEX "projects_organization_idx" ON "projects" USING btree ("organization_id");--> statement-breakpoint
-CREATE UNIQUE INDEX "pull_requests_repository_external_unique" ON "pull_requests" USING btree ("repository_id","external_id");--> statement-breakpoint
-CREATE UNIQUE INDEX "pull_requests_tenant_id_unique" ON "pull_requests" USING btree ("organization_id","project_id","id");--> statement-breakpoint
-CREATE UNIQUE INDEX "release_candidates_project_version_unique" ON "release_candidates" USING btree ("project_id","version");--> statement-breakpoint
-CREATE UNIQUE INDEX "release_candidates_tenant_id_unique" ON "release_candidates" USING btree ("organization_id","project_id","id");--> statement-breakpoint
-CREATE UNIQUE INDEX "repositories_tenant_id_unique" ON "repositories" USING btree ("organization_id","project_id","id");--> statement-breakpoint
-CREATE UNIQUE INDEX "repositories_connection_external_unique" ON "repositories" USING btree ("connection_id","external_id");--> statement-breakpoint
-CREATE UNIQUE INDEX "repository_branches_repository_name_unique" ON "repository_branches" USING btree ("repository_id","name");--> statement-breakpoint
-CREATE UNIQUE INDEX "repository_branches_tenant_id_unique" ON "repository_branches" USING btree ("organization_id","project_id","id");--> statement-breakpoint
-CREATE UNIQUE INDEX "repository_connections_provider_external_unique" ON "repository_connections" USING btree ("organization_id","provider","external_id");--> statement-breakpoint
-CREATE UNIQUE INDEX "repository_connections_tenant_id_unique" ON "repository_connections" USING btree ("organization_id","project_id","id");--> statement-breakpoint
-CREATE UNIQUE INDEX "requirement_versions_requirement_version_unique" ON "requirement_versions" USING btree ("requirement_id","version");--> statement-breakpoint
-CREATE UNIQUE INDEX "requirement_versions_tenant_id_unique" ON "requirement_versions" USING btree ("organization_id","project_id","id");--> statement-breakpoint
-CREATE UNIQUE INDEX "requirements_tenant_id_unique" ON "requirements" USING btree ("organization_id","project_id","id");--> statement-breakpoint
-CREATE UNIQUE INDEX "security_findings_tenant_id_unique" ON "security_findings" USING btree ("organization_id","project_id","id");--> statement-breakpoint
-CREATE INDEX "security_findings_project_idx" ON "security_findings" USING btree ("organization_id","project_id");--> statement-breakpoint
-CREATE UNIQUE INDEX "security_scans_tenant_id_unique" ON "security_scans" USING btree ("organization_id","project_id","id");--> statement-breakpoint
-CREATE INDEX "security_scans_project_idx" ON "security_scans" USING btree ("organization_id","project_id");--> statement-breakpoint
-CREATE UNIQUE INDEX "test_results_tenant_id_unique" ON "test_results" USING btree ("organization_id","project_id","id");--> statement-breakpoint
-CREATE INDEX "test_results_project_idx" ON "test_results" USING btree ("organization_id","project_id");--> statement-breakpoint
-CREATE UNIQUE INDEX "test_runs_tenant_id_unique" ON "test_runs" USING btree ("organization_id","project_id","id");--> statement-breakpoint
-CREATE INDEX "test_runs_project_idx" ON "test_runs" USING btree ("organization_id","project_id");--> statement-breakpoint
-CREATE UNIQUE INDEX "users_email_unique" ON "users" USING btree ("email");--> statement-breakpoint
-CREATE UNIQUE INDEX "workflow_runs_tenant_id_unique" ON "workflow_runs" USING btree ("organization_id","project_id","id");--> statement-breakpoint
-CREATE INDEX "workflow_runs_project_idx" ON "workflow_runs" USING btree ("organization_id","project_id");--> statement-breakpoint
-CREATE UNIQUE INDEX "workflow_stage_runs_tenant_id_unique" ON "workflow_stage_runs" USING btree ("organization_id","project_id","id");--> statement-breakpoint
-CREATE UNIQUE INDEX "workflow_stages_tenant_id_unique" ON "workflow_stages" USING btree ("organization_id","project_id","id");--> statement-breakpoint
-CREATE UNIQUE INDEX "workflow_stages_template_name_unique" ON "workflow_stages" USING btree ("workflow_template_id","name");--> statement-breakpoint
-CREATE UNIQUE INDEX "workflow_templates_tenant_id_unique" ON "workflow_templates" USING btree ("organization_id","project_id","id");--> statement-breakpoint
-CREATE INDEX "workflow_templates_project_idx" ON "workflow_templates" USING btree ("organization_id","project_id");
 CREATE OR REPLACE FUNCTION set_updated_at() RETURNS trigger LANGUAGE plpgsql AS $$
 BEGIN
   NEW.updated_at = now();
